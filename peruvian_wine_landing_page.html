@@ -1,1 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Viñas del Perú — Wines of the Andes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 
+<style>
+  /* =========================================================
+     DESIGN TOKENS
+  ========================================================= */
+  :root {
+    --terracotta:    #8B3A2A;
+    --terracotta-lt: #C4673A;
+    --terracotta-dk: #5C2318;
+    --cream:         #F5EFE0;
+    --parchment:     #EDE5CF;
+    --parchment-dk:  #D4C9AF;
+    --sage:          #7A8C72;
+    --sage-lt:       #9BAD93;
+    --sage-dk:       #4E5C49;
+    --gold:          #C9973A;
+    --gold-lt:       #E4B96A;
+    --ink:           #1E1712;
+    --ink-mid:       #3D3028;
+    --ink-soft:      #6B5A4E;
+    --white:         #FDFAF5;
+
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Jost', sans-serif;
+
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  16px;
+
+    --basket-width: 420px;
+  }
+
+  /* =========================================================
+     RESET & BASE
+  ========================================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* =========================================================
+     SCROLLBAR
+  ========================================================= */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--parchment); }
+  ::-webkit-scrollbar-thumb { background: var(--parchment-dk); border-radius: 3px; }
+
+  /* =========================================================
+     NAV
+  ========================================================= */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(245, 239, 224, 0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--parchment-dk);
+    transition: padding 0.3s var(--ease-smooth);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--terracotta-dk);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-link {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover { color: var(--terracotta); }
+
+  .basket-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--terracotta);
+    color: var(--cream);
+    border: none;
+    padding: 9px 20px;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s var(--ease-smooth);
+  }
+
+  .basket-btn:hover { background: var(--terracotta-dk); }
+
+  .basket-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 500;
+    transition: transform 0.3s var(--ease-bounce);
+  }
+
+  .basket-count.bump { transform: scale(1.4); }
+
+  /* =========================================================
+     HERO
+  ========================================================= */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+    background: var(--terracotta-dk);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(139,58,42,0.5) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,151,58,0.15) 0%, transparent 60%),
+      linear-gradient(160deg, #1E1712 0%, #3D2215 45%, #5C2318 100%);
+  }
+
+  /* Decorative vine lines */
+  .hero-ornament {
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 100%;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+  }
+
+  .hero-eyebrow {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 8vw, 100px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--cream);
+    margin-bottom: 32px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-lt);
+  }
+
+  .hero-tagline {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(245,239,224,0.55);
+    margin-bottom: 8px;
+  }
+
+  .hero-tagline-en {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: rgba(245,239,224,0.35);
+    margin-bottom: 48px;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    padding: 14px 40px;
+    border: 1px solid rgba(201,151,58,0.6);
+    color: var(--gold-lt);
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 1px;
+    transition: all 0.3s var(--ease-smooth);
+  }
+
+  .hero-cta:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    right: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(245,239,224,0.3);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(201,151,58,0.5), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.4; }
+  }
+
+  /* =========================================================
+     SECTION WRAPPER
+  ========================================================= */
+  .section {
+    padding: 100px 48px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 64px;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .section-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--terracotta-dk);
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  /* =========================================================
+     DIVIDER
+  ========================================================= */
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 48px;
+  }
+
+  .ornament-divider::before,
+  .ornament-divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(to right, transparent, var(--parchment-dk), transparent);
+  }
+
+  /* =========================================================
+     EXPLORE LAYOUT — MAP + CATALOGUE
+  ========================================================= */
+  .explore-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  /* =========================================================
+     MAP PANEL
+  ========================================================= */
+  .map-panel {
+    position: sticky;
+    top: 90px;
+    padding: 40px 32px;
+    background: var(--parchment);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--parchment-dk);
+  }
+
+  .map-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--terracotta-dk);
+    margin-bottom: 6px;
+  }
+
+  .map-subtitle {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+
+  .map-svg-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  #peru-map {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .region-path {
+    cursor: pointer;
+    transition: fill 0.25s var(--ease-smooth), opacity 0.25s;
+    fill: var(--sage);
+    opacity: 0.5;
+    stroke: var(--parchment);
+    stroke-width: 1.5;
+  }
+
+  .region-path:hover,
+  .region-path.active {
+    opacity: 1;
+    fill: var(--terracotta);
+  }
+
+  .region-path.dimmed {
+    opacity: 0.2;
+  }
+
+  .region-label {
+    pointer-events: none;
+    font-family: var(--font-body);
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    fill: var(--cream);
+    text-anchor: middle;
+  }
+
+  .map-legend {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+  }
+
+  .legend-item:hover { background: var(--parchment-dk); }
+  .legend-item.active { background: rgba(139,58,42,0.12); color: var(--terracotta-dk); }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--sage);
+    transition: background 0.2s;
+  }
+
+  .legend-item.active .legend-dot { background: var(--terracotta); }
+
+  .map-reset {
+    margin-top: 16px;
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 0.5px solid var(--parchment-dk);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .map-reset.visible { display: block; }
+  .map-reset:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+  /* =========================================================
+     CATALOGUE PANEL
+  ========================================================= */
+  .catalogue-panel {
+    padding-left: 48px;
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 7px 18px;
+    border-radius: 2px;
+    border: 0.5px solid var(--parchment-dk);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s var(--ease-smooth);
+  }
+
+  .filter-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .filter-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: var(--cream); }
+
+  .filter-sep {
+    width: 0.5px;
+    height: 28px;
+    background: var(--parchment-dk);
+    margin: 0 4px;
+  }
+
+  .sort-select {
+    margin-left: auto;
+    padding: 7px 28px 7px 12px;
+    border: 0.5px solid var(--parchment-dk);
+    border-radius: 2px;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B5A4E' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  /* WINE GRID */
+  .wine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+  }
+
+  /* WINE CARD */
+  .wine-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--parchment-dk);
+    overflow: hidden;
+    transition: transform 0.35s var(--ease-smooth), box-shadow 0.35s var(--ease-smooth);
+    cursor: pointer;
+    animation: fadeUp 0.5s var(--ease-smooth) both;
+  }
+
+  .wine-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px rgba(30,23,18,0.1), 0 4px 12px rgba(30,23,18,0.06);
+  }
+
+  .wine-card.dimmed {
+    opacity: 0.35;
+    transform: scale(0.98);
+    pointer-events: none;
+  }
+
+  .wine-card.highlighted {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold-lt);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: var(--terracotta-dk);
+  }
+
+  .card-image-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wine-bottle-svg {
+    height: 180px;
+    opacity: 0.85;
+    transition: transform 0.4s var(--ease-smooth);
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+  }
+
+  .wine-card:hover .wine-bottle-svg {
+    transform: scale(1.05) translateY(-4px);
+  }
+
+  .card-type-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 4px 10px;
+    border-radius: 1px;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .badge-red    { background: rgba(92,35,24,0.85); color: #F5C4A0; }
+  .badge-white  { background: rgba(122,140,114,0.85); color: #DDE8D8; }
+  .badge-rosé   { background: rgba(196,103,58,0.85); color: #FFE0CC; }
+
+  .card-region-chip {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    padding: 4px 10px;
+    background: rgba(245,239,224,0.1);
+    backdrop-filter: blur(6px);
+    border: 0.5px solid rgba(245,239,224,0.2);
+    border-radius: 1px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.7);
+  }
+
+  .card-body {
+    padding: 22px 24px;
+  }
+
+  .card-winery {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--terracotta-dk);
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+
+  .card-grape {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+
+  .card-tasting {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    border-left: 2px solid var(--parchment-dk);
+    padding-left: 12px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 0.5px solid var(--parchment-dk);
+  }
+
+  .card-price {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--terracotta);
+  }
+
+  .card-price span {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+
+  .add-btn {
+    padding: 9px 20px;
+    background: var(--terracotta);
+    color: var(--cream);
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s var(--ease-smooth);
+  }
+
+  .add-btn:hover { background: var(--terracotta-dk); transform: scale(1.02); }
+  .add-btn:active { transform: scale(0.97); }
+  .add-btn.added  { background: var(--sage-dk); }
+
+  /* No results */
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink-soft);
+    display: none;
+  }
+
+  /* =========================================================
+     PROVENANCE STRIP
+  ========================================================= */
+  .provenance-strip {
+    padding: 80px 48px;
+    background: var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+  }
+
+  .provenance-item {
+    padding: 40px 36px;
+    border-right: 0.5px solid rgba(245,239,224,0.08);
+    text-align: center;
+  }
+
+  .provenance-item:last-child { border-right: none; }
+
+  .provenance-number {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .provenance-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.45);
+  }
+
+  /* =========================================================
+     BASKET OVERLAY
+  ========================================================= */
+  .basket-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,23,18,0.5);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease-smooth);
+  }
+
+  .basket-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .basket-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: var(--basket-width);
+    max-width: 95vw;
+    background: var(--white);
+    transform: translateX(100%);
+    transition: transform 0.4s var(--ease-smooth);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .basket-panel.open {
+    transform: translateX(0);
+  }
+
+  .basket-header {
+    padding: 28px 32px;
+    border-bottom: 0.5px solid var(--parchment-dk);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .basket-header-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--terracotta-dk);
+  }
+
+  .basket-close {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border: 0.5px solid var(--parchment-dk);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 18px;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+
+  .basket-close:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+  /* ---- Basket views ---- */
+  .basket-view { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+  .basket-view.hidden { display: none; }
+
+  /* ITEMS */
+  .basket-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+  }
+
+  .basket-empty {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  .basket-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 0.5px solid var(--parchment-dk);
+    animation: fadeIn 0.3s var(--ease-smooth);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .basket-item-thumb {
+    width: 48px; height: 64px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .basket-item-info { flex: 1; min-width: 0; }
+
+  .basket-item-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--terracotta-dk);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .basket-item-grape {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .basket-qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qty-btn {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 0.5px solid var(--parchment-dk);
+    background: transparent;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .qty-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+  .qty-num {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 16px;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  .basket-item-price {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--terracotta);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .basket-item-remove {
+    background: transparent;
+    border: none;
+    color: var(--parchment-dk);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: color 0.2s;
+    display: flex;
+  }
+
+  .basket-item-remove:hover { color: var(--terracotta); }
+
+  .basket-footer {
+    padding: 24px 32px;
+    border-top: 0.5px solid var(--parchment-dk);
+    flex-shrink: 0;
+  }
+
+  .basket-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+  }
+
+  .basket-total-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .basket-total-price {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--terracotta-dk);
+  }
+
+  .checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--terracotta);
+    color: var(--cream);
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .checkout-btn:hover { background: var(--terracotta-dk); }
+  .checkout-btn:disabled { background: var(--parchment-dk); cursor: not-allowed; }
+
+  /* CHECKOUT FORM */
+  .checkout-form {
+    padding: 24px 32px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .form-section-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--terracotta-dk);
+    margin-bottom: 16px;
+    margin-top: 24px;
+  }
+
+  .form-section-title:first-child { margin-top: 0; }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 0.5px solid var(--parchment-dk);
+    border-radius: var(--radius-sm);
+    background: var(--cream);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .form-input:focus { border-color: var(--terracotta); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-submit-footer {
+    padding: 20px 32px;
+    border-top: 0.5px solid var(--parchment-dk);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-back-btn {
+    background: transparent;
+    border: 0.5px solid var(--parchment-dk);
+    padding: 12px;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .form-back-btn:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+  /* ORDER CONFIRMATION */
+  .confirm-view {
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+  }
+
+  .confirm-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(122,140,114,0.15);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    animation: popIn 0.5s var(--ease-bounce);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .confirm-check {
+    width: 32px; height: 32px;
+    stroke: var(--sage-dk);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawCheck 0.6s ease 0.4s forwards;
+  }
+
+  @keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .confirm-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--terracotta-dk);
+    margin-bottom: 12px;
+  }
+
+  .confirm-subtitle {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .confirm-order-num {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--gold);
+    margin-bottom: 36px;
+  }
+
+  .confirm-continue {
+    padding: 12px 32px;
+    background: var(--terracotta);
+    color: var(--cream);
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .confirm-continue:hover { background: var(--terracotta-dk); }
+
+  /* =========================================================
+     FOOTER
+  ========================================================= */
+  footer {
+    background: var(--ink);
+    padding: 64px 48px 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+  }
+
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .footer-brand span { color: var(--gold); }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: rgba(245,239,224,0.4);
+    line-height: 1.7;
+    max-width: 280px;
+    margin-bottom: 24px;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: rgba(245,239,224,0.25);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-col-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: rgba(245,239,224,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cream); }
+
+  /* =========================================================
+     RESPONSIVE
+  ========================================================= */
+  @media (max-width: 1024px) {
+    .explore-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .map-panel {
+      position: static;
+      max-width: 100%;
+    }
+
+    .catalogue-panel { padding-left: 0; padding-top: 40px; }
+
+    .provenance-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    footer {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-link { display: none; }
+
+    .hero { padding: 0 24px 60px; }
+
+    .section { padding: 64px 20px; }
+    .ornament-divider { margin: 0 20px; }
+
+    .wine-grid { grid-template-columns: 1fr; }
+
+    .provenance-strip {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 40px 20px;
+    }
+
+    footer { padding: 48px 20px 32px; }
+
+    .basket-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">Viñas <span>del</span> Perú</a>
+  <div class="nav-right">
+    <a href="#explore" class="nav-link">Collection</a>
+    <a href="#about" class="nav-link">About</a>
+    <button class="basket-btn" id="open-basket">
+      Basket
+      <span class="basket-count" id="basket-count">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Decorative SVG vines -->
+  <svg class="hero-ornament" viewBox="0 0 500 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M400 50 Q350 200 420 350 Q490 500 380 650 Q270 800 300 900" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M420 150 Q380 180 360 220" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M410 280 Q440 310 400 350" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M395 420 Q360 440 370 480" stroke="white" stroke-width="0.8" fill="none"/>
+    <circle cx="360" cy="225" r="8" fill="white" opacity="0.6"/>
+    <circle cx="402" cy="353" r="6" fill="white" opacity="0.5"/>
+    <circle cx="368" cy="484" r="7" fill="white" opacity="0.4"/>
+    <path d="M250 100 Q200 250 270 400 Q340 550 220 700" stroke="white" stroke-width="0.6" fill="none"/>
+    <circle cx="268" cy="398" r="5" fill="white" opacity="0.35"/>
+  </svg>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">Est. — The Andean Cellar</span>
+    <h1 class="hero-title">
+      Wines of<br/>
+      <em>Ancient</em><br/>
+      Earth
+    </h1>
+    <p class="hero-tagline">Del Ande a tu copa — vinos con alma.</p>
+    <p class="hero-tagline-en">From the Andes to your glass — wines with soul.</p>
+    <a href="#explore" class="hero-cta">Explore the Collection</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ========== PROVENANCE NUMBERS ========== -->
+<div class="provenance-strip" id="about">
+  <div class="provenance-item">
+    <div class="provenance-number">4</div>
+    <div class="provenance-label">Wine Regions</div>
+  </div>
+  <div class="provenance-item">
+    <div class="provenance-number">10</div>
+    <div class="provenance-label">Curated Wines</div>
+  </div>
+  <div class="provenance-item">
+    <div class="provenance-number">500+</div>
+    <div class="provenance-label">Metres Altitude</div>
+  </div>
+  <div class="provenance-item">
+    <div class="provenance-number">3000</div>
+    <div class="provenance-label">Years of Vines</div>
+  </div>
+</div>
+
+<!-- ========== EXPLORE ========== -->
+<section class="section" id="explore">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Our Collection</span>
+      <h2 class="section-title">Explore <em>by Region</em></h2>
+    </div>
+  </div>
+
+  <div class="explore-layout">
+
+    <!-- MAP -->
+    <div class="map-panel">
+      <h3 class="map-title">Origins Map</h3>
+      <p class="map-subtitle">Click a region to filter wines</p>
+
+      <div class="map-svg-wrapper">
+        <svg id="peru-map" viewBox="0 0 260 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- Simplified Peru SVG regions -->
+          <!-- Full country outline -->
+          <path class="region-path" id="r-lima"
+            d="M72 120 L90 110 L105 115 L110 128 L118 130 L120 145 L110 158 L100 162 L88 155 L75 148 L68 138 Z"
+            data-region="Lima Coast"/>
+          <path class="region-path" id="r-ica"
+            d="M88 155 L100 162 L110 158 L120 145 L125 158 L130 175 L122 188 L112 195 L98 190 L85 180 L82 168 Z"
+            data-region="Ica Valley"/>
+          <path class="region-path" id="r-arequipa"
+            d="M98 190 L112 195 L122 188 L135 195 L142 208 L138 224 L124 230 L110 228 L100 218 L92 205 Z"
+            data-region="Arequipa"/>
+          <path class="region-path" id="r-tacna"
+            d="M110 228 L124 230 L138 224 L145 234 L148 248 L142 258 L128 262 L115 255 L106 244 Z"
+            data-region="Tacna"/>
+
+          <!-- Country border outline (decorative, non-clickable) -->
+          <path d="M58 60 L72 50 L90 48 L110 50 L130 58 L148 65 L158 80 L160 95 L155 108 L150 118 L148 130 L148 248 L142 258 L128 262 L115 255 L106 244 L105 260 L100 275 L88 280 L75 275 L65 260 L62 240 L55 220 L48 200 L45 175 L48 150 L52 125 L55 95 L52 75 Z"
+                fill="none" stroke="var(--parchment-dk)" stroke-width="1.5" opacity="0.4"/>
+
+          <!-- Pacific Ocean Label -->
+          <text x="22" y="200" font-size="7" fill="var(--parchment-dk)" opacity="0.5" font-family="Georgia, serif" font-style="italic" transform="rotate(-90, 22, 200)">Pacific Ocean</text>
+
+          <!-- Region labels -->
+          <text class="region-label" x="93" y="138">Lima</text>
+          <text class="region-label" x="105" y="172">Ica</text>
+          <text class="region-label" x="118" y="212">Arequipa</text>
+          <text class="region-label" x="127" y="246">Tacna</text>
+
+          <!-- Dotted latitude lines -->
+          <line x1="45" y1="150" x2="165" y2="150" stroke="var(--parchment-dk)" stroke-width="0.5" stroke-dasharray="3,4" opacity="0.3"/>
+          <line x1="45" y1="200" x2="165" y2="200" stroke="var(--parchment-dk)" stroke-width="0.5" stroke-dasharray="3,4" opacity="0.3"/>
+          <line x1="45" y1="250" x2="165" y2="250" stroke="var(--parchment-dk)" stroke-width="0.5" stroke-dasharray="3,4" opacity="0.3"/>
+
+          <!-- Compass rose -->
+          <g transform="translate(220, 80)">
+            <circle cx="0" cy="0" r="14" fill="none" stroke="var(--parchment-dk)" stroke-width="0.5" opacity="0.4"/>
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="var(--parchment-dk)" stroke-width="0.8" opacity="0.5"/>
+            <line x1="-10" y1="0" x2="10" y2="0" stroke="var(--parchment-dk)" stroke-width="0.8" opacity="0.5"/>
+            <text x="0" y="-14" text-anchor="middle" font-size="7" fill="var(--parchment-dk)" opacity="0.5">N</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="map-legend" id="map-legend">
+        <div class="legend-item" data-region="Lima Coast">
+          <div class="legend-dot"></div>
+          Lima Coast
+        </div>
+        <div class="legend-item" data-region="Ica Valley">
+          <div class="legend-dot"></div>
+          Ica Valley
+        </div>
+        <div class="legend-item" data-region="Arequipa">
+          <div class="legend-dot"></div>
+          Arequipa
+        </div>
+        <div class="legend-item" data-region="Tacna">
+          <div class="legend-dot"></div>
+          Tacna
+        </div>
+      </div>
+
+      <button class="map-reset" id="map-reset">✕ Clear region filter</button>
+    </div>
+
+    <!-- CATALOGUE -->
+    <div class="catalogue-panel">
+      <div class="filters">
+        <div class="filter-group" id="type-filters">
+          <button class="filter-btn active" data-type="all">All</button>
+          <button class="filter-btn" data-type="Red">Red</button>
+          <button class="filter-btn" data-type="White">White</button>
+          <button class="filter-btn" data-type="Rosé">Rosé</button>
+        </div>
+        <div class="filter-sep"></div>
+        <select class="sort-select" id="sort-select">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="region">By Region</option>
+        </select>
+      </div>
+
+      <div class="wine-grid" id="wine-grid">
+        <!-- Cards injected by JS -->
+      </div>
+      <div class="no-results" id="no-results">No wines match your current selection.</div>
+    </div>
+  </div>
+</section>
+
+<div class="ornament-divider">Viñas del Perú</div>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div>
+    <div class="footer-brand">Viñas <span>del</span> Perú</div>
+    <p class="footer-tagline">A curated selection of Peru's finest wines — sourced from ancient valleys, sun-bleached coastal plains, and cool Andean heights.</p>
+    <p class="footer-copy">© 2025 Viñas del Perú. All rights reserved.</p>
+  </div>
+  <div>
+    <div class="footer-col-title">Explore</div>
+    <ul class="footer-links">
+      <li><a href="#">Collection</a></li>
+      <li><a href="#">Our Regions</a></li>
+      <li><a href="#">About Peru</a></li>
+      <li><a href="#">Winemakers</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Service</div>
+    <ul class="footer-links">
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Returns</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Trade</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- ========== BASKET ========== -->
+<div class="basket-overlay" id="basket-overlay"></div>
+<div class="basket-panel" id="basket-panel">
+
+  <div class="basket-header">
+    <span class="basket-header-title">Your Basket</span>
+    <button class="basket-close" id="close-basket">&#x2715;</button>
+  </div>
+
+  <!-- VIEW: ITEMS -->
+  <div class="basket-view" id="view-items">
+    <div class="basket-items" id="basket-items-list">
+      <div class="basket-empty" id="basket-empty">Your basket is empty.<br/><em>Discover our collection below.</em></div>
+    </div>
+    <div class="basket-footer">
+      <div class="basket-total-row">
+        <span class="basket-total-label">Total</span>
+        <span class="basket-total-price" id="basket-total">£0.00</span>
+      </div>
+      <button class="checkout-btn" id="go-checkout" disabled>Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- VIEW: CHECKOUT FORM -->
+  <div class="basket-view hidden" id="view-checkout">
+    <div class="checkout-form" id="checkout-form">
+      <div class="form-section-title">Personal Details</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" placeholder="Elena" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" placeholder="García" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" placeholder="elena@example.com" />
+      </div>
+
+      <div class="form-section-title">Delivery Address</div>
+      <div class="form-group">
+        <label class="form-label">Street Address</label>
+        <input class="form-input" type="text" placeholder="12 Vineyard Lane" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input class="form-input" type="text" placeholder="London" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Postcode</label>
+          <input class="form-input" type="text" placeholder="W1A 1AA" />
+        </div>
+      </div>
+
+      <div class="form-section-title">Payment Details</div>
+      <div class="form-group">
+        <label class="form-label">Cardholder Name</label>
+        <input class="form-input" type="text" placeholder="Elena García" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input class="form-input" type="text" placeholder="•••• •••• •••• ••••" maxlength="19" id="card-num-input"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="text" placeholder="MM / YY" maxlength="7"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="text" placeholder="•••" maxlength="3"/>
+        </div>
+      </div>
+    </div>
+    <div class="form-submit-footer">
+      <button class="checkout-btn" id="place-order-btn">Place Order</button>
+      <button class="form-back-btn" id="back-to-basket">← Back to Basket</button>
+    </div>
+  </div>
+
+  <!-- VIEW: CONFIRMATION -->
+  <div class="basket-view hidden" id="view-confirm">
+    <div class="confirm-view">
+      <div class="confirm-icon">
+        <svg class="confirm-check" viewBox="0 0 40 40">
+          <polyline points="8,20 16,30 32,12"/>
+        </svg>
+      </div>
+      <h2 class="confirm-title">Order Placed</h2>
+      <p class="confirm-subtitle">Thank you — your wine is on its way.<br/>A confirmation has been sent to your email.</p>
+      <p class="confirm-order-num" id="confirm-order-num">Order #VDP-00000</p>
+      <button class="confirm-continue" id="confirm-continue">Continue Browsing</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
+const wines = [
+  {
+    id: 1,
+    winery: "Tacama",
+    name: "Gran Tinto Reserva",
+    grape: "Cabernet Sauvignon",
+    type: "Red",
+    region: "Ica Valley",
+    vintage: 2020,
+    price: 34.50,
+    tasting: "Deep garnet with notes of blackcurrant, cedar and a whisper of dark chocolate. Firm but refined tannins with a lingering finish.",
+    colour: "#4A1A12"
+  },
+  {
+    id: 2,
+    winery: "Santiago Queirolo",
+    name: "Intipalka Malbec",
+    grape: "Malbec",
+    type: "Red",
+    region: "Ica Valley",
+    vintage: 2021,
+    price: 28.00,
+    tasting: "Vibrant plum and violet aromas open to a palate of ripe cherries, cocoa and soft vanilla. Velvety texture with a clean finish.",
+    colour: "#5C2A3A"
+  },
+  {
+    id: 3,
+    winery: "Viña Tacama",
+    name: "Blanco de Blancos",
+    grape: "Sauvignon Blanc",
+    type: "White",
+    region: "Ica Valley",
+    vintage: 2022,
+    price: 24.00,
+    tasting: "Crisp and aromatic with fresh citrus, cut grass and elderflower. Bright acidity and a clean mineral finish — perfect with ceviche.",
+    colour: "#3A5C2A"
+  },
+  {
+    id: 4,
+    winery: "Bodega Tabernero",
+    name: "Montesierpe Rosado",
+    grape: "Syrah",
+    type: "Rosé",
+    region: "Lima Coast",
+    vintage: 2022,
+    price: 22.50,
+    tasting: "Delicate salmon-pink. Strawberry, watermelon and rose petal on the nose. Light-bodied, dry and refreshingly vivid on the palate.",
+    colour: "#8B3A55"
+  },
+  {
+    id: 5,
+    winery: "Bodegas & Viñedos Tabernero",
+    name: "Gran Shiraz",
+    grape: "Syrah",
+    type: "Red",
+    region: "Lima Coast",
+    vintage: 2019,
+    price: 42.00,
+    tasting: "Rich and structured — black pepper, smoked meat and dark berry fruit. A powerful wine of genuine depth and poise.",
+    colour: "#3A1A2C"
+  },
+  {
+    id: 6,
+    winery: "Viñas de Tacna",
+    name: "Piedra del Sol",
+    grape: "Tempranillo",
+    type: "Red",
+    region: "Tacna",
+    vintage: 2020,
+    price: 31.00,
+    tasting: "Earthy and complex — leather, dried fig and wild herbs layered over ripe red fruit. A distinctly Iberian soul born of Andean soil.",
+    colour: "#5C3A18"
+  },
+  {
+    id: 7,
+    winery: "El Pedregal",
+    name: "Chardonnay Sur Lie",
+    grape: "Chardonnay",
+    type: "White",
+    region: "Arequipa",
+    vintage: 2021,
+    price: 36.00,
+    tasting: "Aged on its lees for eight months, this wine offers toasted brioche, ripe pear and hazelnut with a creamy, round mid-palate.",
+    colour: "#2A4A3A"
+  },
+  {
+    id: 8,
+    winery: "Arequipeña Wines",
+    name: "Cuesta Volcánica",
+    grape: "Merlot",
+    type: "Red",
+    region: "Arequipa",
+    vintage: 2021,
+    price: 38.50,
+    tasting: "Volcanic terroir shapes this structured Merlot — plum, mocha and graphite with a mineral backbone. Exceptional length.",
+    colour: "#3A2218"
+  },
+  {
+    id: 9,
+    winery: "Bodega Vivanco",
+    name: "Viognier del Pacífico",
+    grape: "Viognier",
+    type: "White",
+    region: "Lima Coast",
+    vintage: 2022,
+    price: 29.50,
+    tasting: "Intensely aromatic — apricot, peach blossom and orange zest. The Pacific breeze keeps it lively with a long, perfumed finish.",
+    colour: "#3A5240"
+  },
+  {
+    id: 10,
+    winery: "Viña Queirolo",
+    name: "Generación Q Reserva",
+    grape: "Cabernet Franc",
+    type: "Red",
+    region: "Tacna",
+    vintage: 2019,
+    price: 55.00,
+    tasting: "The flagship — graphite, black olive, dried herbs and cassis. A commanding wine that evolves beautifully over two hours in a decanter.",
+    colour: "#2A1A2C"
+  }
+];
+
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let basket = [];           // [{wine, qty}]
+let activeRegion = null;   // string | null
+let activeType = "all";    // "all" | "Red" | "White" | "Rosé"
+let activeSort = "default";
+
+/* ─────────────────────────────────────────────
+   BOTTLE SVG (colour-adaptive)
+───────────────────────────────────────────── */
+function bottleSVG(colour) {
+  return `<svg class="wine-bottle-svg" viewBox="0 0 60 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg${colour.replace('#','')}a" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+        <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
+      </linearGradient>
+    </defs>
+    <!-- Capsule -->
+    <rect x="22" y="10" width="16" height="20" rx="3" fill="#C9973A"/>
+    <!-- Neck -->
+    <rect x="24" y="28" width="12" height="24" rx="1" fill="${colour}"/>
+    <rect x="24" y="28" width="12" height="24" rx="1" fill="url(#bg${colour.replace('#','')}a)"/>
+    <!-- Shoulder -->
+    <path d="M18 52 Q18 68 16 75 L16 165 Q16 175 30 175 Q44 175 44 165 L44 75 Q42 68 42 52 Z" fill="${colour}"/>
+    <path d="M18 52 Q18 68 16 75 L16 165 Q16 175 30 175 Q44 175 44 165 L44 75 Q42 68 42 52 Z" fill="url(#bg${colour.replace('#','')}a)"/>
+    <!-- Label area -->
+    <rect x="19" y="100" width="22" height="46" rx="2" fill="rgba(245,239,224,0.15)"/>
+    <!-- Base -->
+    <ellipse cx="30" cy="166" rx="14" ry="4" fill="rgba(0,0,0,0.2)"/>
+  </svg>`;
+}
+
+/* ─────────────────────────────────────────────
+   RENDER CARDS
+───────────────────────────────────────────── */
+function renderGrid() {
+  const grid = document.getElementById('wine-grid');
+  const noResults = document.getElementById('no-results');
+  grid.innerHTML = '';
+
+  let list = [...wines];
+
+  // Filter by type
+  if (activeType !== 'all') {
+    list = list.filter(w => w.type === activeType);
+  }
+
+  // Filter by region
+  if (activeRegion) {
+    list = list.filter(w => w.region === activeRegion);
+  }
+
+  // Sort
+  if (activeSort === 'price-asc')   list.sort((a,b) => a.price - b.price);
+  if (activeSort === 'price-desc')  list.sort((a,b) => b.price - a.price);
+  if (activeSort === 'region')      list.sort((a,b) => a.region.localeCompare(b.region));
+
+  if (list.length === 0) {
+    noResults.style.display = 'block';
+    return;
+  } else {
+    noResults.style.display = 'none';
+  }
+
+  list.forEach((wine, i) => {
+    const inBasket = basket.find(b => b.wine.id === wine.id);
+    const card = document.createElement('div');
+    card.className = 'wine-card';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.dataset.id = wine.id;
+    card.dataset.region = wine.region;
+
+    const badgeClass = wine.type === 'Red' ? 'badge-red' : wine.type === 'White' ? 'badge-white' : 'badge-rosé';
+
+    card.innerHTML = `
+      <div class="card-image" style="background:${wine.colour}">
+        <div class="card-image-bg">${bottleSVG(wine.colour)}</div>
+        <span class="card-type-badge ${badgeClass}">${wine.type}</span>
+        <span class="card-region-chip">${wine.region}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-winery">${wine.winery} · ${wine.vintage}</div>
+        <h3 class="card-name">${wine.name}</h3>
+        <p class="card-grape">${wine.grape}</p>
+        <p class="card-tasting">${wine.tasting}</p>
+        <div class="card-footer">
+          <div class="card-price">£${wine.price.toFixed(2)} <span>/ bottle</span></div>
+          <button class="add-btn ${inBasket ? 'added' : ''}" data-id="${wine.id}">
+            ${inBasket ? 'Added ✓' : 'Add to Basket'}
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Click card body → highlight region
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('add-btn')) return;
+      highlightRegion(wine.region);
+    });
+
+    // Add to basket
+    card.querySelector('.add-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      addToBasket(wine);
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* ─────────────────────────────────────────────
+   MAP INTERACTIONS
+───────────────────────────────────────────── */
+function highlightRegion(region) {
+  activeRegion = (activeRegion === region) ? null : region;
+  applyMapState();
+  renderGrid();
+}
+
+function applyMapState() {
+  const paths = document.querySelectorAll('.region-path');
+  const legendItems = document.querySelectorAll('.legend-item');
+  const resetBtn = document.getElementById('map-reset');
+
+  paths.forEach(p => {
+    const r = p.dataset.region;
+    p.classList.remove('active','dimmed');
+    if (activeRegion) {
+      if (r === activeRegion) p.classList.add('active');
+      else p.classList.add('dimmed');
+    }
+  });
+
+  legendItems.forEach(li => {
+    li.classList.toggle('active', li.dataset.region === activeRegion);
+  });
+
+  resetBtn.classList.toggle('visible', !!activeRegion);
+}
+
+// Wire up map paths
+document.querySelectorAll('.region-path').forEach(path => {
+  path.addEventListener('click', () => highlightRegion(path.dataset.region));
+  path.addEventListener('mouseenter', () => { if (!activeRegion) path.style.opacity = '0.85'; });
+  path.addEventListener('mouseleave', () => { if (!activeRegion) path.style.opacity = ''; });
+});
+
+// Wire up legend items
+document.querySelectorAll('.legend-item').forEach(li => {
+  li.addEventListener('click', () => highlightRegion(li.dataset.region));
+});
+
+// Reset
+document.getElementById('map-reset').addEventListener('click', () => {
+  activeRegion = null;
+  applyMapState();
+  renderGrid();
+});
+
+/* ─────────────────────────────────────────────
+   FILTERS
+───────────────────────────────────────────── */
+document.querySelectorAll('#type-filters .filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#type-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeType = btn.dataset.type;
+    renderGrid();
+  });
+});
+
+document.getElementById('sort-select').addEventListener('change', (e) => {
+  activeSort = e.target.value;
+  renderGrid();
+});
+
+/* ─────────────────────────────────────────────
+   BASKET LOGIC
+───────────────────────────────────────────── */
+function addToBasket(wine) {
+  const existing = basket.find(b => b.wine.id === wine.id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    basket.push({ wine, qty: 1 });
+  }
+  updateBasketUI();
+  renderGrid();
+  bumpCount();
+}
+
+function removeFromBasket(id) {
+  basket = basket.filter(b => b.wine.id !== id);
+  updateBasketUI();
+  renderGrid();
+}
+
+function changeQty(id, delta) {
+  const item = basket.find(b => b.wine.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromBasket(id);
+  else updateBasketUI();
+}
+
+function updateBasketUI() {
+  const total = basket.reduce((s, b) => s + b.wine.price * b.qty, 0);
+  const count = basket.reduce((s, b) => s + b.qty, 0);
+
+  document.getElementById('basket-count').textContent = count;
+  document.getElementById('basket-total').textContent = `£${total.toFixed(2)}`;
+  document.getElementById('go-checkout').disabled = basket.length === 0;
+
+  const list = document.getElementById('basket-items-list');
+  const empty = document.getElementById('basket-empty');
+
+  if (basket.length === 0) {
+    empty.style.display = 'block';
+    list.innerHTML = '';
+    list.appendChild(empty);
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = '';
+
+  basket.forEach(({ wine, qty }) => {
+    const item = document.createElement('div');
+    item.className = 'basket-item';
+    item.innerHTML = `
+      <div class="basket-item-thumb" style="background:${wine.colour}">
+        ${bottleSVG(wine.colour).replace('height: 180px', 'height: 55px')}
+      </div>
+      <div class="basket-item-info">
+        <div class="basket-item-name">${wine.name}</div>
+        <div class="basket-item-grape">${wine.grape}</div>
+        <div class="basket-qty">
+          <button class="qty-btn" data-action="dec" data-id="${wine.id}">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" data-action="inc" data-id="${wine.id}">+</button>
+        </div>
+      </div>
+      <div class="basket-item-price">£${(wine.price * qty).toFixed(2)}</div>
+      <button class="basket-item-remove" data-id="${wine.id}" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/>
+        </svg>
+      </button>
+    `;
+
+    item.querySelector('[data-action="inc"]').addEventListener('click', () => changeQty(wine.id, 1));
+    item.querySelector('[data-action="dec"]').addEventListener('click', () => changeQty(wine.id, -1));
+    item.querySelector('.basket-item-remove').addEventListener('click', () => removeFromBasket(wine.id));
+
+    list.appendChild(item);
+  });
+}
+
+function bumpCount() {
+  const el = document.getElementById('basket-count');
+  el.classList.remove('bump');
+  void el.offsetWidth; // reflow
+  el.classList.add('bump');
+  setTimeout(() => el.classList.remove('bump'), 400);
+}
+
+/* ─────────────────────────────────────────────
+   BASKET PANEL OPEN/CLOSE
+───────────────────────────────────────────── */
+function openBasket() {
+  showView('items');
+  document.getElementById('basket-overlay').classList.add('open');
+  document.getElementById('basket-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBasket() {
+  document.getElementById('basket-overlay').classList.remove('open');
+  document.getElementById('basket-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('open-basket').addEventListener('click', openBasket);
+document.getElementById('close-basket').addEventListener('click', closeBasket);
+document.getElementById('basket-overlay').addEventListener('click', closeBasket);
+
+/* ─────────────────────────────────────────────
+   VIEWS: items → checkout → confirm
+───────────────────────────────────────────── */
+function showView(name) {
+  ['view-items','view-checkout','view-confirm'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden', !id.includes(name));
+  });
+}
+
+document.getElementById('go-checkout').addEventListener('click', () => {
+  if (basket.length > 0) showView('checkout');
+});
+
+document.getElementById('back-to-basket').addEventListener('click', () => showView('items'));
+
+document.getElementById('place-order-btn').addEventListener('click', () => {
+  const orderNum = 'VDP-' + Math.floor(10000 + Math.random() * 90000);
+  document.getElementById('confirm-order-num').textContent = `Order #${orderNum}`;
+  showView('confirm');
+});
+
+document.getElementById('confirm-continue').addEventListener('click', () => {
+  basket = [];
+  updateBasketUI();
+  renderGrid();
+  closeBasket();
+});
+
+/* ─────────────────────────────────────────────
+   CARD NUMBER FORMATTING
+───────────────────────────────────────────── */
+document.getElementById('card-num-input').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,16);
+  this.value = v.replace(/(.{4})/g,'$1 ').trim();
+});
+
+/* ─────────────────────────────────────────────
+   NAV SCROLL EFFECT
+───────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('main-nav');
+  nav.style.padding = window.scrollY > 50 ? '12px 48px' : '18px 48px';
+}, { passive: true });
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+renderGrid();
+updateBasketUI();
+
+</script>
+</body>
+</html>
